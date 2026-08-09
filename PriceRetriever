@@ -1,0 +1,27 @@
+import requests
+import pandas as pd
+
+API_KEY="XXXXXXXXXXXXX"
+
+stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
+
+
+
+url = (
+     "https://www.alphavantage.co/query"
+    "?function=TIME_SERIES_DAILY"
+     f"&symbol=GOOGL"
+     "&outputsize=compact"
+      f"&apikey={API_KEY}"
+  )
+
+response = requests.get(url)
+data = response.json()
+
+
+df = pd.DataFrame.from_dict(
+     data["Time Series (Daily)"],
+     orient="index"
+    )
+
+df.to_csv("GOOGL.csv")
