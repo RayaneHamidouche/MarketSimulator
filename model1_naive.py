@@ -31,7 +31,7 @@ for stock in stocks:
     # ----------------------------------------------
 
     df = pd.read_csv(
-        f"C:/Users/heatw/OneDrive - Twyford Academies/Documents/MarketData/{stock}.csv",
+        f"C:/PATH/{stock}.csv",
         index_col=0
     )
 
@@ -147,7 +147,7 @@ predictions = pd.DataFrame(
 )
 
 predictions.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model1_naive_predictions.csv",
+    "C:/PATH/Predictions/model1_naive_predictions.csv",
     index=False
 )
 
@@ -159,7 +159,7 @@ print("\nPredictions saved.")
 # ==================================================
 
 predictions = pd.read_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model1_naive_predictions.csv"
+    "C:/PATH/Predictions/model1_naive_predictions.csv"
 )
 
 
@@ -253,7 +253,7 @@ for stock in stocks:
 statistics = pd.DataFrame(results)
 
 statistics.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model1_statistics.csv",
+    "C:/PATH/Predictions/model1_statistics.csv",
     index=False
 )
 
@@ -264,7 +264,7 @@ statistics.to_csv(
 
 print("\n")
 print("=" * 70)
-print("MODEL 1 — NAÏVE VOLATILITY FORECAST")
+print("MODEL 1 — NAIVE VOLATILITY FORECAST")
 print("=" * 70)
 
 print(
@@ -274,4 +274,4 @@ print(
 )
 
 print("\nStatistics saved to:")
-print("C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model1_statistics.csv")
+print("C:/PATH/Predictions/model1_statistics.csv")
