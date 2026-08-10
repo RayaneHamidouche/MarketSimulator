@@ -4,7 +4,7 @@ import os
 
 
 # ==================================================
-# SETTINGS
+# Setting up variables
 # ==================================================
 
 stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
@@ -16,7 +16,7 @@ os.makedirs("Predictions", exist_ok=True)
 
 
 # ==================================================
-# PART 1: CREATE PREDICTIONS
+# PART 1: Creating the predictions
 # ==================================================
 
 all_predictions = []
@@ -27,7 +27,7 @@ for stock in stocks:
     print(f"Processing {stock}...")
 
     # ----------------------------------------------
-    # Load data
+    # Loading data
     # ----------------------------------------------
 
     df = pd.read_csv(
@@ -35,26 +35,26 @@ for stock in stocks:
         index_col=0
     )
 
-    # Convert dates
+    # Converting dates
     df.index = pd.to_datetime(
         df.index,
         dayfirst=True
     )
 
-    # Sort oldest -> newest
+    # Sorting from oldest -> newest
     df = df.sort_index()
 
-    # Convert close to numbers
+    # Convert close price to numbers
     df["close"] = pd.to_numeric(df["close"])
 
     # ----------------------------------------------
-    # Calculate daily returns
+    # Calculating daily returns
     # ----------------------------------------------
 
     df["return"] = df["close"].pct_change()
 
     # ----------------------------------------------
-    # Calculate 20-day volatility
+    # Calculating 20-day volatility
     # ----------------------------------------------
 
     df["volatility"] = (
@@ -63,7 +63,7 @@ for stock in stocks:
         .std()
     )
 
-    # Remove missing volatility values
+    # Removing missing volatility values
     df = df.dropna(
         subset=["volatility"]
     )
@@ -71,9 +71,9 @@ for stock in stocks:
     # ----------------------------------------------
     # Split into training and test periods
     #
-    # Model 1 doesn't actually need training,
-    # but we use the same test period as the
-    # other models for a fair comparison.
+    # Model 1 requires no training, but we evaluate it
+    # on the same test period as the other models
+    # to ensure a fair comparison.
     # ----------------------------------------------
 
     split_index = int(
@@ -83,10 +83,10 @@ for stock in stocks:
     test = df.iloc[split_index:].copy()
 
     # ----------------------------------------------
-    # Naïve prediction
+    # Naive prediction:
     #
-    # Tomorrow's volatility =
-    # today's volatility
+    # Assumes:
+    # Tomorrow's volatility = today's volatility
     # ----------------------------------------------
 
     test["predicted_volatility"] = (
@@ -139,7 +139,7 @@ for stock in stocks:
 
 
 # ==================================================
-# PART 2: SAVE PREDICTIONS
+# PART 2: Saving predictions
 # ==================================================
 
 predictions = pd.DataFrame(
@@ -155,7 +155,7 @@ print("\nPredictions saved.")
 
 
 # ==================================================
-# PART 3: LOAD PREDICTIONS
+# PART 3: Loading predictions
 # ==================================================
 
 predictions = pd.read_csv(
@@ -164,7 +164,7 @@ predictions = pd.read_csv(
 
 
 # ==================================================
-# PART 4: STATISTICAL ANALYSIS
+# PART 4: Statistical analysis
 # ==================================================
 
 results = []
@@ -177,7 +177,7 @@ for stock in stocks:
     ].copy()
 
     # ----------------------------------------------
-    # MAE
+    # Mean absolute error
     # ----------------------------------------------
 
     mae = stock_data[
@@ -185,7 +185,7 @@ for stock in stocks:
     ].mean()
 
     # ----------------------------------------------
-    # RMSE
+    # Root mean square error
     # ----------------------------------------------
 
     rmse = np.sqrt(
@@ -247,7 +247,7 @@ for stock in stocks:
 
 
 # ==================================================
-# PART 5: SAVE STATISTICAL RESULTS
+# PART 5: Saving statistical results
 # ==================================================
 
 statistics = pd.DataFrame(results)
@@ -259,7 +259,7 @@ statistics.to_csv(
 
 
 # ==================================================
-# PART 6: PRINT RESULTS
+# PART 6: Printing results
 # ==================================================
 
 print("\n")
