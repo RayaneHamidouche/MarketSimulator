@@ -3,7 +3,7 @@ import os
 
 
 # --------------------------------------------------
-# SETTINGS
+# Setting up variables
 # --------------------------------------------------
 
 stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
@@ -21,7 +21,7 @@ all_predictions = []
 
 
 # --------------------------------------------------
-# PROCESS EACH STOCK
+# Processing each stock
 # --------------------------------------------------
 
 for stock in stocks:
@@ -30,7 +30,7 @@ for stock in stocks:
 
     # Load data
     df = pd.read_csv(
-        f"C:/Users/heatw/OneDrive - Twyford Academies/Documents/MarketData/{stock}.csv",
+        f"C:/PATH/MarketData/{stock}.csv",
         index_col=0
     )
 
@@ -47,13 +47,13 @@ for stock in stocks:
     df["close"] = pd.to_numeric(df["close"])
 
     # --------------------------------------------------
-    # CALCULATE DAILY RETURNS
+    # Calculate daily returns
     # --------------------------------------------------
 
     df["return"] = df["close"].pct_change()
 
     # --------------------------------------------------
-    # CALCULATE 20-DAY VOLATILITY
+    # Calculate the 20 day volatility
     # --------------------------------------------------
 
     df["volatility"] = (
@@ -63,9 +63,9 @@ for stock in stocks:
     )
 
     # --------------------------------------------------
-    # MODEL 2
+    # Model 2
     #
-    # Predict tomorrow's volatility using the
+    # Predicts tomorrow's volatility using the
     # average volatility from the previous 5 days.
     # --------------------------------------------------
 
@@ -85,7 +85,7 @@ for stock in stocks:
     )
 
     # --------------------------------------------------
-    # CALCULATE PREDICTION ERROR
+    # Calculating the prediction error
     # --------------------------------------------------
 
     df["absolute_error"] = (
@@ -94,7 +94,7 @@ for stock in stocks:
     ).abs()
 
     # --------------------------------------------------
-    # STORE RESULTS
+    # Storing the results
     # --------------------------------------------------
 
     for date, row in df.iterrows():
@@ -112,24 +112,24 @@ for stock in stocks:
 
 
 # --------------------------------------------------
-# CREATE DATAFRAME
+# Creating a dataframe
 # --------------------------------------------------
 
 all_predictions = pd.DataFrame(all_predictions)
 
 
 # --------------------------------------------------
-# SAVE ALL PREDICTIONS
+# Saving the predctions to .csv file
 # --------------------------------------------------
 
 all_predictions.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model2_moving_average_predictions.csv",
+    "C:/PATH/Predictions/model2_moving_average_predictions.csv",
     index=False
 )
 
 
 # --------------------------------------------------
-# CALCULATE MAE FOR EACH STOCK
+# Calculating the MAE for each stock
 # --------------------------------------------------
 
 mae_results = []
@@ -153,7 +153,7 @@ mae_results = pd.DataFrame(mae_results)
 
 
 # --------------------------------------------------
-# PRINT RESULTS
+# Printing results
 # --------------------------------------------------
 
 print("\nModel 2 - Mean Absolute Error:")
@@ -161,11 +161,11 @@ print(mae_results)
 
 
 # --------------------------------------------------
-# SAVE MAE
+# Saving the Mean Absolute Error
 # --------------------------------------------------
 
 mae_results.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model2_mae.csv",
+    "C:/PATH/Predictions/model2_mae.csv",
     index=False
 )
 
@@ -177,8 +177,8 @@ print(
 )
 
 print(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model2_mae.csv"
+    "C:/PATH/Predictions/model2_mae.csv"
 )
 
 print("\nMAE saved to:")
-print("C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model2_mae.csv")
+print("C:/PATH/Predictions/model2_mae.csv")
