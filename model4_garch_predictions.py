@@ -6,7 +6,7 @@ from arch import arch_model
 
 
 # --------------------------------------------------
-# SETTINGS
+# Setting up variables
 # --------------------------------------------------
 
 stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
@@ -24,7 +24,7 @@ all_predictions = []
 
 
 # --------------------------------------------------
-# PROCESS EACH STOCK
+# Processing each stock
 # --------------------------------------------------
 
 for stock in stocks:
@@ -32,11 +32,11 @@ for stock in stocks:
     print(f"Processing {stock}...")
 
     # --------------------------------------------------
-    # LOAD DATA
+    # Load data
     # --------------------------------------------------
 
     df = pd.read_csv(
-        f"C:/Users/heatw/OneDrive - Twyford Academies/Documents/MarketData/{stock}.csv",
+        f"C:/PATH/MarketData/{stock}.csv",
         index_col=0
     )
 
@@ -54,14 +54,14 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # CALCULATE RETURNS
+    # Calculate the returns
     # --------------------------------------------------
 
     df["return"] = df["close"].pct_change()
 
 
     # --------------------------------------------------
-    # CALCULATE OUR TARGET VOLATILITY
+    # Calculate the target volatility
     #
     # This is the same 20-day volatility used by
     # Models 1-3, so the models are comparable.
@@ -75,7 +75,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # REMOVE INITIAL MISSING VALUES
+    # Remove the missing values
     # --------------------------------------------------
 
     df = df.dropna(
@@ -87,7 +87,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # TRAIN / TEST SPLIT
+    # Train / Test split
     #
     # We use the first 80% to fit the model and
     # the final 20% to test it.
@@ -102,7 +102,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # FIT GARCH(1,1)
+    # Fit GARCH(1,1)
     #
     # ARCH expects returns rather than volatility.
     # Multiplying by 100 makes the numerical scale
@@ -126,7 +126,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # EXPANDING-WINDOW FORECAST
+    # Expanding window forecast
     #
     # For each test day, refit the model using only
     # information available up to that day.
@@ -211,7 +211,7 @@ for stock in stocks:
 
 
 # --------------------------------------------------
-# CREATE FINAL DATAFRAME
+# Creating the final dataframe
 # --------------------------------------------------
 
 all_predictions = pd.DataFrame(
@@ -220,17 +220,17 @@ all_predictions = pd.DataFrame(
 
 
 # --------------------------------------------------
-# SAVE PREDICTIONS
+# Save predictions
 # --------------------------------------------------
 
 all_predictions.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model4_garch_predictions.csv",
+    "C:/PATH/Predictions/model4_garch_predictions.csv",
     index=False
 )
 
 
 # --------------------------------------------------
-# CALCULATE MAE
+# Calculate the MAE
 # --------------------------------------------------
 
 mae_results = []
@@ -255,7 +255,7 @@ mae_results = pd.DataFrame(
 
 
 # --------------------------------------------------
-# PRINT RESULTS
+# Print results
 # --------------------------------------------------
 
 print("\nModel 4 - GARCH Mean Absolute Error:")
@@ -263,11 +263,11 @@ print(mae_results)
 
 
 # --------------------------------------------------
-# SAVE MAE
+# Save MAE
 # --------------------------------------------------
 
 mae_results.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model4_mae.csv",
+    "C:/PATH/Predictions/model4_mae.csv",
     index=False
 )
 
@@ -279,7 +279,7 @@ print(
 )
 
 print(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model4_garch_predictions.csv"
+    "C:/PATH/Predictions/model4_garch_predictions.csv"
 )
 
 print("\nMAE saved to:")
