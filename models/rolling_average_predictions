@@ -1,0 +1,308 @@
+import pandas as pd
+import numpy as np
+import os
+
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+
+
+# --------------------------------------------------
+# Setting up variables
+# --------------------------------------------------
+
+stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
+
+VOLATILITY_WINDOW = 20
+VOLUME_WINDOW = 20
+TRAIN_SIZE = 0.8
+
+
+# Create folder for predictions
+os.makedirs("Predictions", exist_ok=True)
+
+
+# Store all predictions
+all_predictions = []
+
+
+# --------------------------------------------------
+# Processing each stock
+# --------------------------------------------------
+
+for stock in stocks:
+
+    print(f"Processing {stock}...")
+
+    # --------------------------------------------------
+    # Load data
+    # --------------------------------------------------
+
+    df = pd.read_csv(
+        f"C:/PATH/MarketData/{stock}.csv",
+        index_col=0
+    )
+
+    # Convert dates
+    df.index = pd.to_datetime(
+        df.index,
+        dayfirst=True
+    )
+
+    # Sort chronologically
+    df = df.sort_index()
+
+    # Making sure numerical columns are numeric
+    df["close"] = pd.to_numeric(df["close"])
+    df["volume"] = pd.to_numeric(df["volume"])
+
+
+    # --------------------------------------------------
+    # Calcuating returns
+    # --------------------------------------------------
+
+    df["return"] = df["close"].pct_change()
+
+    # Absolute return
+    df["absolute_return"] = df["return"].abs()
+
+
+    # --------------------------------------------------
+    # Calculating volatility
+    # --------------------------------------------------
+
+    df["volatility"] = (
+        df["return"]
+        .rolling(VOLATILITY_WINDOW)
+        .std()
+    )
+
+
+    # --------------------------------------------------
+    # Calculating the relative volume
+    # --------------------------------------------------
+
+    df["average_volume"] = (
+        df["volume"]
+        .rolling(VOLUME_WINDOW)
+        .mean()
+    )
+
+    df["volume_ratio"] = (
+        df["volume"] /
+        df["average_volume"]
+    )
+
+
+    # --------------------------------------------------
+    # Create lagged features:
+    #
+    # We shift everything by one day so that the model
+    # only uses information that was available BEFORE
+    # the volatility we are trying to predict.
+    # --------------------------------------------------
+
+    df["volatility_lag1"] = (
+        df["volatility"].shift(1)
+    )
+
+    df["absolute_return_lag1"] = (
+        df["absolute_return"].shift(1)
+    )
+
+    df["volume_ratio_lag1"] = (
+        df["volume_ratio"].shift(1)
+    )
+
+
+    # --------------------------------------------------
+    # Remove the missing values
+    # --------------------------------------------------
+
+    df = df.dropna(
+        subset=[
+            "volatility",
+            "volatility_lag1",
+            "absolute_return_lag1",
+            "volume_ratio_lag1"
+        ]
+    )
+
+
+    # --------------------------------------------------
+    # Defining the features
+    # --------------------------------------------------
+
+    features = [
+        "volatility_lag1",
+        "absolute_return_lag1",
+        "volume_ratio_lag1"
+    ]
+
+    X = df[features]
+
+    y = df["volatility"]
+
+
+    # --------------------------------------------------
+    # Train / Test split
+    #
+    # IMPORTANT:
+    # We do not randomly shuffle financial data.
+    # The first 80% is training data.
+    # The final 20% is testing data.
+    # --------------------------------------------------
+
+    split_index = int(len(df) * TRAIN_SIZE)
+
+    X_train = X.iloc[:split_index]
+    X_test = X.iloc[split_index:]
+
+    y_train = y.iloc[:split_index]
+    y_test = y.iloc[split_index:]
+
+
+    # --------------------------------------------------
+    # Training the regression model
+    # --------------------------------------------------
+
+    model = LinearRegression()
+
+    model.fit(
+        X_train,
+        y_train
+    )
+
+
+    # --------------------------------------------------
+    # Make predictions
+    # --------------------------------------------------
+
+    predictions = model.predict(X_test)
+
+
+    # --------------------------------------------------
+    # Calculate absolute error
+    # --------------------------------------------------
+
+    absolute_errors = (
+        np.abs(predictions - y_test)
+    )
+
+
+    # --------------------------------------------------
+    # Storing the results
+    # --------------------------------------------------
+
+    for i in range(len(X_test)):
+
+        all_predictions.append({
+            "date": X_test.index[i],
+            "stock": stock,
+            "predicted_volatility": predictions[i],
+            "actual_volatility": y_test.iloc[i],
+            "absolute_error": absolute_errors.iloc[i]
+        })
+
+
+    # --------------------------------------------------
+    # Printing the model information
+    # --------------------------------------------------
+
+    print("Training observations:", len(X_train))
+    print("Testing observations:", len(X_test))
+
+    print("Coefficients:")
+
+    for feature, coefficient in zip(
+        features,
+        model.coef_
+    ):
+        print(
+            f"  {feature}: {coefficient}"
+        )
+
+    print(
+        "Intercept:",
+        model.intercept_
+    )
+
+    print()
+
+
+# --------------------------------------------------
+# Creating the final dataframe
+# --------------------------------------------------
+
+all_predictions = pd.DataFrame(
+    all_predictions
+)
+
+
+# --------------------------------------------------
+# Saving predictions to .csv file
+# --------------------------------------------------
+
+all_predictions.to_csv(
+    "C:/PATH/Predictions/model3_regression_predictions.csv",
+    index=False
+)
+
+
+# --------------------------------------------------
+# Calculating the MAE
+# --------------------------------------------------
+
+mae_results = []
+
+for stock in stocks:
+
+    stock_data = all_predictions[
+        all_predictions["stock"] == stock
+    ]
+
+    mae = stock_data["absolute_error"].mean()
+
+    mae_results.append({
+        "stock": stock,
+        "MAE": mae
+    })
+
+
+mae_results = pd.DataFrame(
+    mae_results
+)
+
+
+# --------------------------------------------------
+# Printing results
+# --------------------------------------------------
+
+print("\nModel 3 - Mean Absolute Error:")
+print(mae_results)
+
+
+# --------------------------------------------------
+# Saving MSE to .csv file
+# --------------------------------------------------
+
+mae_results.to_csv(
+    "C:/PATH/Predictions/model3_mae.csv",
+    index=False
+)
+
+
+print("\nFinished!")
+
+print(
+    "Predictions saved to:"
+)
+
+print(
+    "C:/PATH/Predictions/model3_regression_predictions.csv"
+)
+
+print("\nMAE saved to:")
+
+print(
+    "C:/PATH/Predictions/model3_mae.csv"
+)
