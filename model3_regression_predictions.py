@@ -38,7 +38,7 @@ for stock in stocks:
     # --------------------------------------------------
 
     df = pd.read_csv(
-        f"C:/Users/heatw/OneDrive - Twyford Academies/Documents/MarketData/{stock}.csv",
+        f"C:/PATH/MarketData/{stock}.csv",
         index_col=0
     )
 
@@ -243,7 +243,7 @@ all_predictions = pd.DataFrame(
 # --------------------------------------------------
 
 all_predictions.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model3_regression_predictions.csv",
+    "C:/PATH/Predictions/model3_regression_predictions.csv",
     index=False
 )
 
@@ -286,7 +286,7 @@ print(mae_results)
 # --------------------------------------------------
 
 mae_results.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model3_mae.csv",
+    "C:/PATH/Predictions/model3_mae.csv",
     index=False
 )
 
@@ -298,11 +298,11 @@ print(
 )
 
 print(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model3_regression_predictions.csv"
+    "C:/PATH/Predictions/model3_regression_predictions.csv"
 )
 
 print("\nMAE saved to:")
 
 print(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model3_mae.csv"
+    "C:/PATH/Predictions/model3_mae.csv"
 )
