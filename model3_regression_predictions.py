@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error
 
 
 # --------------------------------------------------
-# SETTINGS
+# Setting up variables
 # --------------------------------------------------
 
 stocks = ["AAPL", "MSFT", "AMZN", "NVDA", "GOOGL"]
@@ -26,7 +26,7 @@ all_predictions = []
 
 
 # --------------------------------------------------
-# PROCESS EACH STOCK
+# Processing each stock
 # --------------------------------------------------
 
 for stock in stocks:
@@ -34,7 +34,7 @@ for stock in stocks:
     print(f"Processing {stock}...")
 
     # --------------------------------------------------
-    # LOAD DATA
+    # Load data
     # --------------------------------------------------
 
     df = pd.read_csv(
@@ -51,13 +51,13 @@ for stock in stocks:
     # Sort chronologically
     df = df.sort_index()
 
-    # Make sure numerical columns are numeric
+    # Making sure numerical columns are numeric
     df["close"] = pd.to_numeric(df["close"])
     df["volume"] = pd.to_numeric(df["volume"])
 
 
     # --------------------------------------------------
-    # CALCULATE RETURNS
+    # Calcuating returns
     # --------------------------------------------------
 
     df["return"] = df["close"].pct_change()
@@ -67,7 +67,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # CALCULATE VOLATILITY
+    # Calculating volatility
     # --------------------------------------------------
 
     df["volatility"] = (
@@ -78,7 +78,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # CALCULATE RELATIVE VOLUME
+    # Calculating the relative volume
     # --------------------------------------------------
 
     df["average_volume"] = (
@@ -94,7 +94,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # CREATE LAGGED FEATURES
+    # Create lagged features:
     #
     # We shift everything by one day so that the model
     # only uses information that was available BEFORE
@@ -115,7 +115,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # REMOVE MISSING VALUES
+    # Remove the missing values
     # --------------------------------------------------
 
     df = df.dropna(
@@ -129,7 +129,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # DEFINE FEATURES AND TARGET
+    # Defining the features
     # --------------------------------------------------
 
     features = [
@@ -144,10 +144,10 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # TRAIN / TEST SPLIT
+    # Train / Test split
     #
     # IMPORTANT:
-    # We DO NOT randomly shuffle financial data.
+    # We do not randomly shuffle financial data.
     # The first 80% is training data.
     # The final 20% is testing data.
     # --------------------------------------------------
@@ -162,7 +162,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # TRAIN REGRESSION MODEL
+    # Training the regression model
     # --------------------------------------------------
 
     model = LinearRegression()
@@ -174,14 +174,14 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # MAKE PREDICTIONS
+    # Make predictions
     # --------------------------------------------------
 
     predictions = model.predict(X_test)
 
 
     # --------------------------------------------------
-    # CALCULATE ABSOLUTE ERROR
+    # Calculate absolute error
     # --------------------------------------------------
 
     absolute_errors = (
@@ -190,7 +190,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # STORE RESULTS
+    # Storing the results
     # --------------------------------------------------
 
     for i in range(len(X_test)):
@@ -205,7 +205,7 @@ for stock in stocks:
 
 
     # --------------------------------------------------
-    # DISPLAY MODEL INFORMATION
+    # Printing the model information
     # --------------------------------------------------
 
     print("Training observations:", len(X_train))
@@ -230,7 +230,7 @@ for stock in stocks:
 
 
 # --------------------------------------------------
-# CREATE FINAL PREDICTION DATAFRAME
+# Creating the final dataframe
 # --------------------------------------------------
 
 all_predictions = pd.DataFrame(
@@ -239,7 +239,7 @@ all_predictions = pd.DataFrame(
 
 
 # --------------------------------------------------
-# SAVE PREDICTIONS
+# Saving predictions to .csv file
 # --------------------------------------------------
 
 all_predictions.to_csv(
@@ -249,7 +249,7 @@ all_predictions.to_csv(
 
 
 # --------------------------------------------------
-# CALCULATE MAE
+# Calculating the MAE
 # --------------------------------------------------
 
 mae_results = []
@@ -274,7 +274,7 @@ mae_results = pd.DataFrame(
 
 
 # --------------------------------------------------
-# PRINT RESULTS
+# Printing results
 # --------------------------------------------------
 
 print("\nModel 3 - Mean Absolute Error:")
@@ -282,7 +282,7 @@ print(mae_results)
 
 
 # --------------------------------------------------
-# SAVE MAE
+# Saving MSE to .csv file
 # --------------------------------------------------
 
 mae_results.to_csv(
