@@ -7,19 +7,19 @@ import matplotlib.pyplot as plt
 # --------------------------------------------------
 
 model1 = pd.read_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model1_mae.csv"
+    "C:/PATH/Predictions/model1_mae.csv"
 )
 
 model2 = pd.read_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model2_mae.csv"
+    "C:/PATH/Predictions/model2_mae.csv"
 )
 
 model3 = pd.read_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model3_mae.csv"
+    "C:/PATH/Predictions/model3_mae.csv"
 )
 
 model4 = pd.read_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model4_mae.csv"
+    "C:/PATH/Predictions/model4_mae.csv"
 )
 
 
@@ -123,12 +123,12 @@ print(wins)
 # --------------------------------------------------
 
 comparison.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model_comparison.csv",
+    "C:/PATH/Predictions/model_comparison.csv",
     index=False
 )
 
 wins.to_csv(
-    "C:/Users/heatw/OneDrive - Twyford Academies/Documents/Predictions/model_wins.csv"
+    "C:/PATH/Predictions/model_wins.csv"
 )
 
 
