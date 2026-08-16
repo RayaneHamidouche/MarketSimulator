@@ -74,4 +74,4 @@ The individual model files can then be run to generate forecasts and statistical
 
 ## Report
 
-A full discussion of the methodology, mathematical background and results is provided in the project report.
+An outline of the methodology and results is provided in the project report.
